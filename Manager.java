@@ -39,7 +39,7 @@ public class Manager {
         return num;
     }
 
-    private static void printMenu() {
+    private static void outputMenu() {
         System.out.println("1 - Create a record.");
         System.out.println("2 - Output list of records.");
         System.out.println("3 - Delete list of records.");
@@ -57,7 +57,7 @@ public class Manager {
     private static void getUserChoice() {
         int num = 0;
         while (num != 4) {
-            printMenu();
+            outputMenu();
             num = inputNumber(1, 4, "Input your choice: ");
             executeUserChoice(num);
         }
@@ -100,20 +100,41 @@ public class Manager {
     private static void createRecord() {
         int num;
         Task obj;
+        boolean isCorrect = true;
         num = inputNumber(1, 4, "Input your choice: ");
-        if (num == 1) {
-            obj = getInfoFromUser("task");
-            listOfTasks.add(obj);
-            mapOfTasks.put(idTask, obj);
-            idTask++;
-        } else if (num == 2) {
-            obj = getInfoFromUser("epic");
-            listOfEpics.add((Epic) obj);
-            mapOfEpics.put(idEpic, (Epic) obj);
-        } else if (num == 3) {
-            obj = getInfoFromUser("subtask");
-            listOfSubtasks.add((Subtask) obj);
-        }
+        do {
+            if (num == 1) {
+                isCorrect = false;
+                obj = getInfoFromUser("task");
+                mapOfTasks.put(idTask, obj);
+                idTask++;
+            } else if (num == 2) {
+                isCorrect = false;
+                obj = getInfoFromUser("epic");
+                mapOfEpics.put(idEpic, (Epic) obj);
+            } else if (num == 3) {
+                Epic epic = chooseEpic();
+                if (epic != null) {
+                    isCorrect = false;
+                    obj = getInfoFromUser("subtask");
+                    HashMap<Integer, Subtask> map = epic.getMapOfSubtasks();
+                    if (map != null) {
+                        int size = map.size();
+                        map.put(size + 1, (Subtask) obj);
+                        epic.setMapOfSubtasks(map);
+                    } else {
+                        map = new HashMap<>();
+                        map.put(1, (Subtask) obj);
+                        epic.setMapOfSubtasks(map);
+                    }
+                } else {
+                    outputTypeOfRecords();
+                    num = inputNumber(1, 4, "Input your choice: ");
+                }
+            } else {
+                isCorrect = false;
+            }
+        } while (isCorrect);
     }
 
     private static void outputTypeOfTasks(String str) {
@@ -126,13 +147,23 @@ public class Manager {
     private static void deleteAllTasks() {
         int num = inputNumber(1, 4, "Input your choice: ");
         if (num == 1) {
-            listOfTasks.clear();
             mapOfTasks.clear();
         } else if (num == 2) {
-            listOfEpics.clear();
             mapOfEpics.clear();
         } else if (num == 3) {
             listOfSubtasks.clear();
+        }
+    }
+
+    private static Epic chooseEpic() {
+        int size = mapOfEpics.size();
+        if (size > 0) {
+            outputAllEpics();
+            int num = inputNumber(1, size, "Input your choice: ");
+            return mapOfEpics.get(num);
+        } else {
+            System.out.println("Firstly add an epic.");
+            return null;
         }
     }
 
@@ -143,33 +174,35 @@ public class Manager {
         } else if (num == 2) {
             outputAllEpics();
         } else if (num == 3) {
-            outputAllSubtasks();
+            //outputAllSubtasks();
         }
     }
 
     private static void outputAllTasks() {
-        for (int i = 0; i < listOfTasks.size(); i++) {
-            System.out.println((i + 1) + " - " + listOfTasks.get(i).getName() + " "
-                    + listOfTasks.get(i).getDescription() + " " + listOfTasks.get(i).getId()
-                    + " " + listOfTasks.get(i).getStatus());
+        int i = 1;
+        for (Task elem: mapOfTasks.values()) {
+            System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
+                    + " " + elem.getId() + " " + elem.getStatus());
+            i++;
         }
     }
 
     private static void outputAllEpics() {
-        for (int i = 0; i < listOfEpics.size(); i++) {
-            System.out.println((i + 1) + " - " + listOfEpics.get(i).getName() + " "
-                    + listOfEpics.get(i).getDescription() + " " + listOfEpics.get(i).getId()
-                    + " " + listOfEpics.get(i).getStatus());
+        int i = 1;
+        for (Epic elem: mapOfEpics.values()) {
+            System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
+                    + " " + elem.getId() + " " + elem.getStatus());
+            i++;
         }
     }
 
-    private static void outputAllSubtasks() {
-        for (int i = 0; i < listOfSubtasks.size(); i++) {
-            System.out.println((i + 1) + " - " + listOfSubtasks.get(i).getName() + " "
-                    + listOfSubtasks.get(i).getDescription() + " " + listOfSubtasks.get(i).getId()
-                    + " " + listOfSubtasks.get(i).getStatus());
-        }
-    }
+//    private static void outputAllSubtasks() {
+//        for (int i = 0; i < listOfSubtasks.size(); i++) {
+//            System.out.println((i + 1) + " - " + listOfSubtasks.get(i).getName() + " "
+//                    + listOfSubtasks.get(i).getDescription() + " " + listOfSubtasks.get(i).getId()
+//                    + " " + listOfSubtasks.get(i).getStatus());
+//        }
+//    }
     private static void executeUserChoice(int num) {
         switch (num) {
             case 1:
