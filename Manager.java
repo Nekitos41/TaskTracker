@@ -8,8 +8,6 @@ public class Manager {
     static Scanner scanner = new Scanner(System.in);
     static HashMap<Integer, Task> mapOfTasks = new HashMap<>();
     static HashMap<Integer, Epic> mapOfEpics = new HashMap<>();
-    static ArrayList<Task> listOfTasks = new ArrayList<>();
-    static ArrayList<Epic> listOfEpics = new ArrayList<>();
     static ArrayList<Subtask> listOfSubtasks = new ArrayList<>();
     static int idTask = 1;
     static int idEpic = 1;
@@ -108,26 +106,31 @@ public class Manager {
                 obj = getInfoFromUser("task");
                 mapOfTasks.put(idTask, obj);
                 idTask++;
+                System.out.println("The task has been created.");
             } else if (num == 2) {
                 isCorrect = false;
                 obj = getInfoFromUser("epic");
                 mapOfEpics.put(idEpic, (Epic) obj);
+                idEpic++;
+                System.out.println("The epic has been created.");
             } else if (num == 3) {
                 Epic epic = chooseEpic();
                 if (epic != null) {
                     isCorrect = false;
                     obj = getInfoFromUser("subtask");
-                    HashMap<Integer, Subtask> map = epic.getMapOfSubtasks();
-                    if (map != null) {
-                        int size = map.size();
-                        map.put(size + 1, (Subtask) obj);
-                        epic.setMapOfSubtasks(map);
+                    HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
+                    if (mapOfSubtasks != null) {
+                        int size = mapOfSubtasks.size();
+                        mapOfSubtasks.put(size + 1, (Subtask) obj);
+                        epic.setMapOfSubtasks(mapOfSubtasks);
+                        System.out.println("The subtask has been created.");
                     } else {
-                        map = new HashMap<>();
-                        map.put(1, (Subtask) obj);
-                        epic.setMapOfSubtasks(map);
+                        mapOfSubtasks = new HashMap<>();
+                        mapOfSubtasks.put(1, (Subtask) obj);
+                        epic.setMapOfSubtasks(mapOfSubtasks);
                     }
                 } else {
+                    System.out.println("Firstly add an epic.");
                     outputTypeOfRecords();
                     num = inputNumber(1, 4, "Input your choice: ");
                 }
@@ -162,7 +165,6 @@ public class Manager {
             int num = inputNumber(1, size, "Input your choice: ");
             return mapOfEpics.get(num);
         } else {
-            System.out.println("Firstly add an epic.");
             return null;
         }
     }
@@ -174,7 +176,13 @@ public class Manager {
         } else if (num == 2) {
             outputAllEpics();
         } else if (num == 3) {
-            //outputAllSubtasks();
+            Epic epic = chooseEpic();
+            if (epic != null) {
+                HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
+                outputAllSubtasks(mapOfSubtasks);
+            } else {
+                System.out.println("List of subtasks is empty.");
+            }
         }
     }
 
@@ -196,13 +204,14 @@ public class Manager {
         }
     }
 
-//    private static void outputAllSubtasks() {
-//        for (int i = 0; i < listOfSubtasks.size(); i++) {
-//            System.out.println((i + 1) + " - " + listOfSubtasks.get(i).getName() + " "
-//                    + listOfSubtasks.get(i).getDescription() + " " + listOfSubtasks.get(i).getId()
-//                    + " " + listOfSubtasks.get(i).getStatus());
-//        }
-//    }
+    private static void outputAllSubtasks(HashMap<Integer, Subtask> mapOfSubtasks) {
+        int i = 1;
+        for (Subtask elem: mapOfSubtasks.values()) {
+            System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
+                    + " " + elem.getId() + " " + elem.getStatus());
+            i++;
+        }
+    }
     private static void executeUserChoice(int num) {
         switch (num) {
             case 1:
