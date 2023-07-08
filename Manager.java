@@ -121,6 +121,7 @@ public class Manager {
                     HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
                     if (mapOfSubtasks != null) {
                         int size = mapOfSubtasks.size();
+                        obj.setId(size + 1);
                         mapOfSubtasks.put(size + 1, (Subtask) obj);
                         epic.setMapOfSubtasks(mapOfSubtasks);
                         System.out.println("The subtask has been created.");
@@ -162,7 +163,7 @@ public class Manager {
         int size = mapOfEpics.size();
         if (size > 0) {
             outputAllEpics();
-            int num = inputNumber(1, size, "Input your choice: ");
+            int num = inputNumber(1, size, "Choose epic: ");
             return mapOfEpics.get(num);
         } else {
             return null;
@@ -181,35 +182,47 @@ public class Manager {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
                 outputAllSubtasks(mapOfSubtasks);
             } else {
-                System.out.println("List of subtasks is empty.");
+                System.out.println("List of subtasks of this epic is empty.");
             }
         }
     }
 
     private static void outputAllTasks() {
-        int i = 1;
-        for (Task elem: mapOfTasks.values()) {
-            System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
-                    + " " + elem.getId() + " " + elem.getStatus());
-            i++;
+        if (mapOfTasks.size() > 0) {
+            int i = 1;
+            for (Task elem : mapOfTasks.values()) {
+                System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
+                        + " " + elem.getId() + " " + elem.getStatus());
+                i++;
+            }
+        } else {
+            System.out.println("List of tasks is empty.");
         }
     }
 
     private static void outputAllEpics() {
-        int i = 1;
-        for (Epic elem: mapOfEpics.values()) {
-            System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
-                    + " " + elem.getId() + " " + elem.getStatus());
-            i++;
+        if (mapOfEpics.size() > 0) {
+            int i = 1;
+            for (Epic elem : mapOfEpics.values()) {
+                System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
+                        + " " + elem.getId() + " " + elem.getStatus());
+                i++;
+            }
+        } else {
+            System.out.println("List of epics is empty.");
         }
     }
 
     private static void outputAllSubtasks(HashMap<Integer, Subtask> mapOfSubtasks) {
-        int i = 1;
-        for (Subtask elem: mapOfSubtasks.values()) {
-            System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
-                    + " " + elem.getId() + " " + elem.getStatus());
-            i++;
+        if (mapOfSubtasks.size() > 0) {
+            int i = 1;
+            for (Subtask elem : mapOfSubtasks.values()) {
+                System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
+                        + " " + elem.getId() + " " + elem.getStatus());
+                i++;
+            }
+        } else {
+            System.out.println("List of subtasks of this epic is empty.");
         }
     }
     private static void executeUserChoice(int num) {
