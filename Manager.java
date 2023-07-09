@@ -40,8 +40,8 @@ public class Manager {
         System.out.println("1 - Create a record.");
         System.out.println("2 - Output list of records.");
         System.out.println("3 - Delete list of records.");
-        //System.out.println("3 - Get record by id.");
-        //System.out.println("4 - Exit.");
+        System.out.println("4 - Get a record by id.");
+        System.out.println("5 - Exit.");
     }
 
     private static void outputTypeOfRecords() {
@@ -53,9 +53,9 @@ public class Manager {
 
     private static void getUserChoice() {
         int num = 0;
-        while (num != 4) {
+        while (num != 5) {
             outputMenu();
-            num = inputNumber(1, 4, "Input your choice: ");
+            num = inputNumber(1, 5, "Input your choice: ");
             executeUserChoice(num);
         }
     }
@@ -184,7 +184,7 @@ public class Manager {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
                 outputAllSubtasks(mapOfSubtasks);
             } else {
-                System.out.println("List of subtasks of all epics is empty.");
+                System.out.println("List of subtasks of this epic is empty.");
             }
         }
     }
@@ -228,6 +228,61 @@ public class Manager {
         }
     }
 
+    private static void outputTypeOfTasksToFind() {
+        System.out.println("1 - Get a task by id.");
+        System.out.println("2 - Get an epic by id.");
+        System.out.println("3 - Get a subtask by id.");
+        System.out.println("4 - Return to menu.");
+    }
+
+    private static void getById() {
+        int id;
+        int num = inputNumber(1, 4, "Input your choice: ");
+        if (num == 1) {
+            if (mapOfTasks.size() > 0) {
+                id = inputNumber(1, idTask - 1, "Input task-id you want to find: ");
+                try {
+                    System.out.println(mapOfTasks.get(id).getName() + " " + mapOfTasks.get(id).getDescription()
+                            + " " + mapOfTasks.get(id).getId() + " " + mapOfTasks.get(id).getStatus());
+                } catch (NullPointerException e) {
+                    System.out.println("There is no task with this id.");
+                }
+            } else {
+                System.out.println("List of tasks is empty.");
+            }
+        } else if (num == 2) {
+            if (mapOfEpics.size() > 0) {
+                id = inputNumber(1, idEpic - 1, "Input epic-id you want to find: ");
+                try {
+                    System.out.println(mapOfEpics.get(id).getName() + " " + mapOfEpics.get(id).getDescription()
+                            + " " + mapOfEpics.get(id).getId() + " " + mapOfEpics.get(id).getStatus());
+                } catch (NullPointerException e) {
+                    System.out.println("There is no epic with this id.");
+                }
+            } else {
+                System.out.println("List of epics is empty.");
+            }
+        } else if (num == 3) {
+            Epic epic = chooseEpic();
+            if (epic != null) {
+                HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
+                if (mapOfSubtasks.size() > 0) {
+                    id = inputNumber(1, mapOfSubtasks.size(), "Input subtask-id you want to find: ");
+                    try {
+                        System.out.println(mapOfSubtasks.get(id).getName() + " " + mapOfSubtasks.get(id).getDescription()
+                                + " " + mapOfSubtasks.get(id).getId() + " " + mapOfSubtasks.get(id).getStatus());
+                    } catch (NullPointerException e) {
+                        System.out.println("There is no subtask with this id.");
+                    }
+                } else {
+                    System.out.println("List of subtasks is empty.");
+                }
+            } else {
+                System.out.println("List of subtasks of all epics is empty.");
+            }
+        }
+    }
+
     private static void executeUserChoice(int num) {
         switch (num) {
             case 1:
@@ -241,6 +296,10 @@ public class Manager {
             case 3:
                 outputTypeOfTasks("Delete");
                 deleteAllTasks();
+                break;
+            case 4:
+                outputTypeOfTasksToFind();
+                getById();
                 break;
         }
     }
