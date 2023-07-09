@@ -8,7 +8,6 @@ public class Manager {
     static Scanner scanner = new Scanner(System.in);
     static HashMap<Integer, Task> mapOfTasks = new HashMap<>();
     static HashMap<Integer, Epic> mapOfEpics = new HashMap<>();
-    static ArrayList<Subtask> listOfSubtasks = new ArrayList<>();
     static int idTask = 1;
     static int idEpic = 1;
     static int idSubtask = 1;
@@ -155,7 +154,10 @@ public class Manager {
         } else if (num == 2) {
             mapOfEpics.clear();
         } else if (num == 3) {
-            listOfSubtasks.clear();
+            Epic epic = chooseEpic();
+            if (epic != null) {
+                epic.getMapOfSubtasks().clear();
+            }
         }
     }
 
@@ -163,7 +165,7 @@ public class Manager {
         int size = mapOfEpics.size();
         if (size > 0) {
             outputAllEpics();
-            int num = inputNumber(1, size, "Choose epic: ");
+            int num = inputNumber(1, idEpic, "Choose epic: ");
             return mapOfEpics.get(num);
         } else {
             return null;
@@ -182,7 +184,7 @@ public class Manager {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
                 outputAllSubtasks(mapOfSubtasks);
             } else {
-                System.out.println("List of subtasks of this epic is empty.");
+                System.out.println("List of subtasks of all epics is empty.");
             }
         }
     }
@@ -225,6 +227,7 @@ public class Manager {
             System.out.println("List of subtasks of this epic is empty.");
         }
     }
+
     private static void executeUserChoice(int num) {
         switch (num) {
             case 1:
