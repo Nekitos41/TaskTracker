@@ -205,44 +205,16 @@ public class Manager {
     }
 
     private static void getById() {
-        int id;
         int num = inputNumber(1, 4, "Input your choice: ");
         if (num == 1) {
-            if (mapOfTasks.size() > 0) {
-                id = inputNumber(1, idTask - 1, "Input task-id you want to find: ");
-                try {
-                    System.out.println(mapOfTasks.get(id));
-                } catch (NullPointerException e) {
-                    System.out.println("There is no task with this id.");
-                }
-            } else {
-                System.out.println("List of tasks is empty.");
-            }
+            getById(mapOfTasks, "task", idTask - 1);
         } else if (num == 2) {
-            if (mapOfEpics.size() > 0) {
-                id = inputNumber(1, idEpic - 1, "Input epic-id you want to find: ");
-                try {
-                    System.out.println(mapOfEpics.get(id));
-                } catch (NullPointerException e) {
-                    System.out.println("There is no epic with this id.");
-                }
-            } else {
-                System.out.println("List of epics is empty.");
-            }
+            getById(mapOfEpics, "epic", idEpic - 1);
         } else if (num == 3) {
             Epic epic = chooseEpic();
             if (epic != null) {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
-                if (mapOfSubtasks.size() > 0) {
-                    id = inputNumber(1, mapOfSubtasks.size(), "Input subtask-id you want to find: ");
-                    try {
-                        System.out.println(mapOfSubtasks.get(id));
-                    } catch (NullPointerException e) {
-                        System.out.println("There is no subtask with this id.");
-                    }
-                } else {
-                    System.out.println("List of subtasks is empty.");
-                }
+                getById(mapOfSubtasks, "subtask", mapOfSubtasks.size());
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
             }
@@ -252,10 +224,10 @@ public class Manager {
     private static <T> void getById(HashMap<Integer, T> map, String str, int max) {
         if (map.size() > 0) {
             int id = inputNumber(1, max, "Input " + str + "-id you want to find: ");
-            try {
-                System.out.println(map.get(id));
-            } catch (NullPointerException e) {
+            if (map.get(id) == null) {
                 System.out.println("There is no " + str + " with this id.");
+            } else {
+                System.out.println(map.get(id));
             }
         } else {
             System.out.println("List of " + str + "s is empty.");
