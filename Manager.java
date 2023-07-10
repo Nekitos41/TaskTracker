@@ -164,8 +164,8 @@ public class Manager {
     private static Epic chooseEpic() {
         int size = mapOfEpics.size();
         if (size > 0) {
-            outputAllEpics();
-            int num = inputNumber(1, idEpic, "Choose epic: ");
+            outputAllRecords(mapOfEpics, "epics");
+            int num = inputNumber(1, idEpic, "Choose epic by id: ");
             return mapOfEpics.get(num);
         } else {
             return null;
@@ -175,56 +175,25 @@ public class Manager {
     private static void outputAllRecords() {
         int num = inputNumber(1, 4, "Input your choice: ");
         if (num == 1) {
-            outputAllTasks();
+            outputAllRecords(mapOfTasks, "tasks");
         } else if (num == 2) {
-            outputAllEpics();
+            outputAllRecords(mapOfEpics, "epics");
         } else if (num == 3) {
             Epic epic = chooseEpic();
             if (epic != null) {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
-                outputAllSubtasks(mapOfSubtasks);
+                outputAllRecords(mapOfSubtasks,"subtasks");
             } else {
                 System.out.println("List of subtasks of this epic is empty.");
             }
         }
     }
 
-    private static void outputAllTasks() {
-        if (mapOfTasks.size() > 0) {
-            int i = 1;
-            for (Task elem : mapOfTasks.values()) {
-                System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
-                        + " " + elem.getId() + " " + elem.getStatus());
-                i++;
-            }
+    private static <T> void outputAllRecords(HashMap<Integer, T> map, String str) {
+        if (map.size() > 0) {
+            map.values().forEach(System.out::println);
         } else {
-            System.out.println("List of tasks is empty.");
-        }
-    }
-
-    private static void outputAllEpics() {
-        if (mapOfEpics.size() > 0) {
-            int i = 1;
-            for (Epic elem : mapOfEpics.values()) {
-                System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
-                        + " " + elem.getId() + " " + elem.getStatus());
-                i++;
-            }
-        } else {
-            System.out.println("List of epics is empty.");
-        }
-    }
-
-    private static void outputAllSubtasks(HashMap<Integer, Subtask> mapOfSubtasks) {
-        if (mapOfSubtasks.size() > 0) {
-            int i = 1;
-            for (Subtask elem : mapOfSubtasks.values()) {
-                System.out.println(i + " - " + elem.getName() + " " + elem.getDescription()
-                        + " " + elem.getId() + " " + elem.getStatus());
-                i++;
-            }
-        } else {
-            System.out.println("List of subtasks of this epic is empty.");
+            System.out.println("List of " + str + " is empty.");
         }
     }
 
@@ -242,8 +211,7 @@ public class Manager {
             if (mapOfTasks.size() > 0) {
                 id = inputNumber(1, idTask - 1, "Input task-id you want to find: ");
                 try {
-                    System.out.println(mapOfTasks.get(id).getName() + " " + mapOfTasks.get(id).getDescription()
-                            + " " + mapOfTasks.get(id).getId() + " " + mapOfTasks.get(id).getStatus());
+                    System.out.println(mapOfTasks.get(id));
                 } catch (NullPointerException e) {
                     System.out.println("There is no task with this id.");
                 }
@@ -254,8 +222,7 @@ public class Manager {
             if (mapOfEpics.size() > 0) {
                 id = inputNumber(1, idEpic - 1, "Input epic-id you want to find: ");
                 try {
-                    System.out.println(mapOfEpics.get(id).getName() + " " + mapOfEpics.get(id).getDescription()
-                            + " " + mapOfEpics.get(id).getId() + " " + mapOfEpics.get(id).getStatus());
+                    System.out.println(mapOfEpics.get(id));
                 } catch (NullPointerException e) {
                     System.out.println("There is no epic with this id.");
                 }
@@ -269,8 +236,7 @@ public class Manager {
                 if (mapOfSubtasks.size() > 0) {
                     id = inputNumber(1, mapOfSubtasks.size(), "Input subtask-id you want to find: ");
                     try {
-                        System.out.println(mapOfSubtasks.get(id).getName() + " " + mapOfSubtasks.get(id).getDescription()
-                                + " " + mapOfSubtasks.get(id).getId() + " " + mapOfSubtasks.get(id).getStatus());
+                        System.out.println(mapOfSubtasks.get(id));
                     } catch (NullPointerException e) {
                         System.out.println("There is no subtask with this id.");
                     }
@@ -280,6 +246,19 @@ public class Manager {
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
             }
+        }
+    }
+
+    private static <T> void getById(HashMap<Integer, T> map, String str, int max) {
+        if (map.size() > 0) {
+            int id = inputNumber(1, max, "Input " + str + "-id you want to find: ");
+            try {
+                System.out.println(map.get(id));
+            } catch (NullPointerException e) {
+                System.out.println("There is no " + str + " with this id.");
+            }
+        } else {
+            System.out.println("List of " + str + "s is empty.");
         }
     }
 
