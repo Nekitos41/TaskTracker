@@ -1,6 +1,5 @@
 package sprint_2.task_tracker;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -41,21 +40,22 @@ public class Manager {
         System.out.println("2 - Output list of records.");
         System.out.println("3 - Delete list of records.");
         System.out.println("4 - Get a record by id.");
-        System.out.println("5 - Exit.");
+        System.out.println("5 - Update status of record.");
+        System.out.println("6 - Exit.");
     }
 
-    private static void outputTypeOfRecords() {
-        System.out.println("1 - Create a task.");
-        System.out.println("2 - Create an epic.");
-        System.out.println("3 - Create a subtask.");
+    private static void outputTypeOfRecords(String str) {
+        System.out.println("1 - " + str + " a task.");
+        System.out.println("2 - " + str + " an epic.");
+        System.out.println("3 - " + str + " a subtask.");
         System.out.println("4 - Return to menu.");
     }
 
     private static void getUserChoice() {
         int num = 0;
-        while (num != 5) {
+        while (num != 6) {
             outputMenu();
-            num = inputNumber(1, 5, "Input your choice: ");
+            num = inputNumber(1, 6, "Input your choice: ");
             executeUserChoice(num);
         }
     }
@@ -131,7 +131,7 @@ public class Manager {
                     }
                 } else {
                     System.out.println("Firstly add an epic.");
-                    outputTypeOfRecords();
+                    outputTypeOfRecords("Create");
                     num = inputNumber(1, 4, "Input your choice: ");
                 }
             } else {
@@ -182,7 +182,7 @@ public class Manager {
             Epic epic = chooseEpic();
             if (epic != null) {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
-                outputAllRecords(mapOfSubtasks,"subtasks");
+                outputAllRecords(mapOfSubtasks, "subtasks");
             } else {
                 System.out.println("List of subtasks of this epic is empty.");
             }
@@ -207,37 +207,47 @@ public class Manager {
     private static void getById() {
         int num = inputNumber(1, 4, "Input your choice: ");
         if (num == 1) {
-            getById(mapOfTasks, "task", idTask - 1);
+            Task task = getById(mapOfTasks, "task", idTask - 1);
+            if (task != null) {
+                System.out.println(task);
+            }
         } else if (num == 2) {
-            getById(mapOfEpics, "epic", idEpic - 1);
+            Epic epic = getById(mapOfEpics, "epic", idEpic - 1);
+            if (epic != null) {
+                System.out.println(epic);
+            }
         } else if (num == 3) {
             Epic epic = chooseEpic();
             if (epic != null) {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
-                getById(mapOfSubtasks, "subtask", mapOfSubtasks.size());
+                Subtask subtask = getById(mapOfSubtasks, "subtask", mapOfSubtasks.size());
+                if (subtask != null) {
+                    System.out.println(subtask);
+                }
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
             }
         }
     }
 
-    private static <T> void getById(HashMap<Integer, T> map, String str, int max) {
+    private static <T> T getById(HashMap<Integer, T> map, String str, int max) {
         if (map.size() > 0) {
             int id = inputNumber(1, max, "Input " + str + "-id you want to find: ");
             if (map.get(id) == null) {
                 System.out.println("There is no " + str + " with this id.");
             } else {
-                System.out.println(map.get(id));
+                return map.get(id);
             }
         } else {
             System.out.println("List of " + str + "s is empty.");
         }
+        return null;
     }
 
     private static void executeUserChoice(int num) {
         switch (num) {
             case 1:
-                outputTypeOfRecords();
+                outputTypeOfRecords("Create");
                 createRecord();
                 break;
             case 2:
@@ -252,6 +262,86 @@ public class Manager {
                 outputTypeOfTasksToFind();
                 getById();
                 break;
+            case 5:
+                outputTypeOfRecords("Update");
+                updateRecords();
+                break;
+            case 6:
+                System.exit(0);
         }
+    }
+
+    private static void updateRecords() {
+        boolean isCorrect;
+        int num = inputNumber(1, 4, "Input your choice: ");
+        if (num == 1) {
+            Task task = getById(mapOfTasks, "task", idTask - 1);
+            if (task != null) {
+                System.out.println(task);
+                isCorrect = setStatus(task, "task");
+                if (isCorrect) {
+                    System.out.println("Updated task: " + task);
+                }
+            }
+        } else if (num == 2) {
+            Epic epic = getById(mapOfEpics, "epic", idEpic - 1);
+            if (epic != null) {
+                System.out.println(epic);
+                isCorrect = setStatus(epic, "epic");
+                if (isCorrect) {
+                    System.out.println("Updated epic: " + epic);
+                }
+            }
+        } else if (num == 3) {
+            Epic epic = chooseEpic();
+            if (epic != null) {
+                HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
+                Subtask subtask = getById(mapOfSubtasks, "subtask", mapOfSubtasks.size());
+                if (subtask != null) {
+                    System.out.println(subtask);
+                    isCorrect = setStatus(subtask, "subtask");
+                    if (isCorrect) {
+                        System.out.println("Updated subtask: " + subtask);
+                    }
+                }
+            } else {
+                System.out.println("List of subtasks of all epics is empty.");
+            }
+        }
+    }
+
+    private static <T> boolean setStatus(T obj, String str) {
+        boolean isCorrect = true;
+        System.out.print("Input status of " + str + " you want to set(IN_PROGRESS or DONE): ");
+        String choice = scanner.nextLine();
+        if (str.equals("task")) {
+            if (choice.equals("IN_PROGRESS")) {
+                ((Task) obj).setStatus("IN_PROGRESS");
+            } else if (choice.equals("DONE")) {
+                ((Task) obj).setStatus("DONE");
+            } else {
+                System.out.println("Incorrect status of " + str + ".");
+                isCorrect = false;
+            }
+        } else if (str.equals("epic")) {
+            if (choice.equals("IN_PROGRESS")) {
+                ((Epic) obj).setStatus("IN_PROGRESS");
+            } else if (choice.equals("DONE")) {
+                ((Epic) obj).setStatus("DONE");
+            } else {
+                System.out.println("Incorrect status of " + str + ".");
+                isCorrect = false;
+            }
+        } else if (str.equals("subtask")) {
+            if (choice.equals("IN_PROGRESS")) {
+                ((Subtask) obj).setStatus("IN_PROGRESS");
+            } else if (choice.equals("DONE")) {
+                ((Subtask) obj).setStatus("DONE");
+            } else {
+                System.out.println("Incorrect status of " + str + ".");
+                isCorrect = false;
+            }
+        }
+        return isCorrect;
     }
 }
