@@ -41,7 +41,8 @@ public class Manager {
         System.out.println("3 - Delete list of records.");
         System.out.println("4 - Get a record by id.");
         System.out.println("5 - Update status of record.");
-        System.out.println("6 - Exit.");
+        System.out.println("6 - Delete a record by id.");
+        System.out.println("7 - Exit.");
     }
 
     private static void outputTypeOfRecords(String str) {
@@ -53,9 +54,9 @@ public class Manager {
 
     private static void getUserChoice() {
         int num = 0;
-        while (num != 6) {
+        while (num != 7) {
             outputMenu();
-            num = inputNumber(1, 6, "Input your choice: ");
+            num = inputNumber(1, 7, "Input your choice: ");
             executeUserChoice(num);
         }
     }
@@ -197,10 +198,10 @@ public class Manager {
         }
     }
 
-    private static void outputTypeOfTasksToFind() {
-        System.out.println("1 - Get a task by id.");
-        System.out.println("2 - Get an epic by id.");
-        System.out.println("3 - Get a subtask by id.");
+    private static void outputTypeOfTasksToFind(String str) {
+        System.out.println("1 - " + str + " a task by id.");
+        System.out.println("2 - " + str + " an epic by id.");
+        System.out.println("3 - " + str + " a subtask by id.");
         System.out.println("4 - Return to menu.");
     }
 
@@ -259,7 +260,7 @@ public class Manager {
                 deleteAllTasks();
                 break;
             case 4:
-                outputTypeOfTasksToFind();
+                outputTypeOfTasksToFind("Get");
                 getById();
                 break;
             case 5:
@@ -267,6 +268,10 @@ public class Manager {
                 updateRecords();
                 break;
             case 6:
+                outputTypeOfTasksToFind("Delete");
+                deleteRecordById();
+                break;
+            case 7:
                 System.exit(0);
         }
     }
@@ -343,5 +348,65 @@ public class Manager {
             }
         }
         return isCorrect;
+    }
+
+    private static void deleteRecordById() {
+        String str;
+        int num = inputNumber(1, 4, "Input your choice: ");
+        if (num == 1) {
+            Task task = getById(mapOfTasks, "task", idTask - 1);
+            if (task != null) {
+                System.out.println(task);
+                System.out.println("Do you want to delete this task ?");
+                System.out.print("Input YES or NO: ");
+                str = scanner.nextLine();
+                if (str.equals("YES")) {
+                    mapOfTasks.remove(task.getId());
+                    System.out.println("Subtask was successfully removed.");
+                } else if (str.equals("NO")) {
+                    System.out.println("Task has not been deleted.");
+                } else {
+                    System.out.println("Incorrect input.");
+                }
+            }
+        } else if (num == 2) {
+            Epic epic = getById(mapOfEpics, "epic", idEpic - 1);
+            if (epic != null) {
+                System.out.println(epic);
+                System.out.println("Do you want to delete this epic ?");
+                System.out.print("Input YES or NO: ");
+                str = scanner.nextLine();
+                if (str.equals("YES")) {
+                    mapOfEpics.remove(epic.getId());
+                    System.out.println("Subtask was successfully removed.");
+                } else if (str.equals("NO")) {
+                    System.out.println("Epic has not been deleted.");
+                } else {
+                    System.out.println("Incorrect input.");
+                }
+            }
+        } else if (num == 3) {
+            Epic epic = chooseEpic();
+            if (epic != null) {
+                HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
+                Subtask subtask = getById(mapOfSubtasks, "subtask", mapOfSubtasks.size());
+                if (subtask != null) {
+                    System.out.println(subtask);
+                    System.out.println("Do you want to delete this subtask ?");
+                    System.out.print("Input YES or NO: ");
+                    str = scanner.nextLine();
+                    if (str.equals("YES")) {
+                        mapOfSubtasks.remove(subtask.getId());
+                        System.out.println("Subtask was successfully removed.");
+                    } else if (str.equals("NO")) {
+                        System.out.println("Subtask has not been deleted.");
+                    } else {
+                        System.out.println("Incorrect input.");
+                    }
+                }
+            } else {
+                System.out.println("List of subtasks of all epics is empty.");
+            }
+        }
     }
 }
