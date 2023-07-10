@@ -53,6 +53,12 @@ public class Manager {
         System.out.println("4 - Return to menu.");
     }
 
+    private static void outputRecordsToUpdate() {
+        System.out.println("1 - Update a task.");
+        System.out.println("2 - Update a subtask.");
+        System.out.println("3 - Return to menu.");
+    }
+
     private static void getUserChoice() {
         int num = 0;
         while (num != 7) {
@@ -251,9 +257,11 @@ public class Manager {
             case 1:
                 outputTypeOfRecords("Create");
                 createRecord();
+                setStatusToEpic();
                 break;
             case 2:
                 outputTypeOfTasks("Output");
+                setStatusToEpic();
                 outputAllRecords();
                 break;
             case 3:
@@ -262,14 +270,17 @@ public class Manager {
                 break;
             case 4:
                 outputTypeOfTasksToFind("Get");
+                setStatusToEpic();
                 getById();
                 break;
             case 5:
-                outputTypeOfRecords("Update");
+                outputRecordsToUpdate();
+                setStatusToEpic();
                 updateRecords();
                 break;
             case 6:
                 outputTypeOfTasksToFind("Delete");
+                setStatusToEpic();
                 deleteRecordById();
                 break;
             case 7:
@@ -279,7 +290,7 @@ public class Manager {
 
     private static void updateRecords() {
         boolean isCorrect;
-        int num = inputNumber(4, "Input your choice: ");
+        int num = inputNumber(3, "Input your choice: ");
         if (num == 1) {
             Task task = getById(mapOfTasks, "task", idTask - 1);
             if (task != null) {
@@ -290,15 +301,6 @@ public class Manager {
                 }
             }
         } else if (num == 2) {
-            Epic epic = getById(mapOfEpics, "epic", idEpic - 1);
-            if (epic != null) {
-                System.out.println(epic);
-                isCorrect = setStatus(epic, "epic");
-                if (isCorrect) {
-                    System.out.println("Updated epic: " + epic);
-                }
-            }
-        } else if (num == 3) {
             Epic epic = chooseEpic();
             if (epic != null) {
                 HashMap<Integer, Subtask> mapOfSubtasks = epic.getMapOfSubtasks();
@@ -325,15 +327,6 @@ public class Manager {
                 ((Task) obj).setStatus("IN_PROGRESS");
             } else if (choice.equals("DONE")) {
                 ((Task) obj).setStatus("DONE");
-            } else {
-                System.out.println("Incorrect status of " + str + ".");
-                isCorrect = false;
-            }
-        } else if (str.equals("epic")) {
-            if (choice.equals("IN_PROGRESS")) {
-                ((Epic) obj).setStatus("IN_PROGRESS");
-            } else if (choice.equals("DONE")) {
-                ((Epic) obj).setStatus("DONE");
             } else {
                 System.out.println("Incorrect status of " + str + ".");
                 isCorrect = false;
@@ -407,6 +400,28 @@ public class Manager {
                 }
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
+            }
+        }
+    }
+
+    private static void setStatusToEpic() {
+        boolean isNew = true;
+        boolean isDone = true;
+        for (Epic epic: mapOfEpics.values()) {
+            for (Subtask subtask: epic.getMapOfSubtasks().values()) {
+                if (!(subtask.getStatus().equals("NEW"))) {
+                    isNew = false;
+                }
+                if (!(subtask.getStatus().equals("DONE"))) {
+                    isDone = false;
+                }
+            }
+            if (epic.getMapOfSubtasks().size() == 0 || isNew) {
+                epic.setStatus("NEW");
+            } else if (isDone) {
+                epic.setStatus("DONE");
+            } else  {
+                epic.setStatus("IN_PROGRESS");
             }
         }
     }
