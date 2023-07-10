@@ -15,7 +15,8 @@ public class Manager {
         getUserChoice();
     }
 
-    private static int inputNumber(int MIN_NUM, int MAX_NUM, String str) {
+    private static int inputNumber(int MAX_NUM, String str) {
+        final int MIN_NUM = 1;
         int num = 0;
         boolean isIncorrect;
         do {
@@ -56,7 +57,7 @@ public class Manager {
         int num = 0;
         while (num != 7) {
             outputMenu();
-            num = inputNumber(1, 7, "Input your choice: ");
+            num = inputNumber(7, "Input your choice: ");
             executeUserChoice(num);
         }
     }
@@ -99,7 +100,7 @@ public class Manager {
         int num;
         Task obj;
         boolean isCorrect = true;
-        num = inputNumber(1, 4, "Input your choice: ");
+        num = inputNumber(4, "Input your choice: ");
         do {
             if (num == 1) {
                 isCorrect = false;
@@ -133,7 +134,7 @@ public class Manager {
                 } else {
                     System.out.println("Firstly add an epic.");
                     outputTypeOfRecords("Create");
-                    num = inputNumber(1, 4, "Input your choice: ");
+                    num = inputNumber(4, "Input your choice: ");
                 }
             } else {
                 isCorrect = false;
@@ -149,7 +150,7 @@ public class Manager {
     }
 
     private static void deleteAllTasks() {
-        int num = inputNumber(1, 4, "Input your choice: ");
+        int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             mapOfTasks.clear();
         } else if (num == 2) {
@@ -166,7 +167,7 @@ public class Manager {
         int size = mapOfEpics.size();
         if (size > 0) {
             outputAllRecords(mapOfEpics, "epics");
-            int num = inputNumber(1, idEpic, "Choose epic by id: ");
+            int num = inputNumber(idEpic, "Choose epic by id: ");
             return mapOfEpics.get(num);
         } else {
             return null;
@@ -174,7 +175,7 @@ public class Manager {
     }
 
     private static void outputAllRecords() {
-        int num = inputNumber(1, 4, "Input your choice: ");
+        int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             outputAllRecords(mapOfTasks, "tasks");
         } else if (num == 2) {
@@ -206,7 +207,7 @@ public class Manager {
     }
 
     private static void getById() {
-        int num = inputNumber(1, 4, "Input your choice: ");
+        int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             Task task = getById(mapOfTasks, "task", idTask - 1);
             if (task != null) {
@@ -233,7 +234,7 @@ public class Manager {
 
     private static <T> T getById(HashMap<Integer, T> map, String str, int max) {
         if (map.size() > 0) {
-            int id = inputNumber(1, max, "Input " + str + "-id you want to find: ");
+            int id = inputNumber(max, "Input " + str + "-id you want to find: ");
             if (map.get(id) == null) {
                 System.out.println("There is no " + str + " with this id.");
             } else {
@@ -278,7 +279,7 @@ public class Manager {
 
     private static void updateRecords() {
         boolean isCorrect;
-        int num = inputNumber(1, 4, "Input your choice: ");
+        int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             Task task = getById(mapOfTasks, "task", idTask - 1);
             if (task != null) {
@@ -352,7 +353,7 @@ public class Manager {
 
     private static void deleteRecordById() {
         String str;
-        int num = inputNumber(1, 4, "Input your choice: ");
+        int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             Task task = getById(mapOfTasks, "task", idTask - 1);
             if (task != null) {
