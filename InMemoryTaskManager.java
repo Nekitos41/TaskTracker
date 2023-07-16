@@ -3,7 +3,7 @@ package sprint_2.task_tracker;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
     static Scanner scanner = new Scanner(System.in);
     static HashMap<Integer, Task> mapOfTasks = new HashMap<>();
     static HashMap<Integer, Epic> mapOfEpics = new HashMap<>();
@@ -102,7 +102,8 @@ public class Manager {
         return obj;
     }
 
-    private static void createRecord() {
+    @Override
+    public void createRecord() {
         int num;
         Task obj;
         boolean isCorrect = true;
@@ -155,7 +156,8 @@ public class Manager {
         System.out.println("4 - Return to menu.");
     }
 
-    private static void deleteAllTasks() {
+    @Override
+    public void deleteAllTasks() {
         int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             mapOfTasks.clear();
@@ -180,7 +182,8 @@ public class Manager {
         }
     }
 
-    private static void outputAllRecords() {
+    @Override
+    public void outputAllRecords() {
         int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             outputAllRecords(mapOfTasks, "tasks");
@@ -212,7 +215,8 @@ public class Manager {
         System.out.println("4 - Return to menu.");
     }
 
-    private static void getById() {
+    @Override
+    public void getById() {
         int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
             Task task = getById(mapOfTasks, "task", idTask - 1);
@@ -253,42 +257,44 @@ public class Manager {
     }
 
     private static void executeUserChoice(int num) {
+        TaskManager taskManager = new InMemoryTaskManager();
         switch (num) {
             case 1:
                 outputTypeOfRecords("Create");
-                createRecord();
-                setStatusToEpic();
+                taskManager.createRecord();
+                taskManager.setStatusToEpic();
                 break;
             case 2:
                 outputTypeOfTasks("Output");
-                setStatusToEpic();
-                outputAllRecords();
+                taskManager.setStatusToEpic();
+                taskManager.outputAllRecords();
                 break;
             case 3:
                 outputTypeOfTasks("Delete");
-                deleteAllTasks();
+                taskManager.deleteAllTasks();
                 break;
             case 4:
                 outputTypeOfTasksToFind("Get");
-                setStatusToEpic();
-                getById();
+                taskManager.setStatusToEpic();
+                taskManager.getById();
                 break;
             case 5:
                 outputRecordsToUpdate();
-                setStatusToEpic();
-                updateRecords();
+                taskManager.setStatusToEpic();
+                taskManager.updateRecords();
                 break;
             case 6:
                 outputTypeOfTasksToFind("Delete");
-                setStatusToEpic();
-                deleteRecordById();
+                taskManager.setStatusToEpic();
+                taskManager.deleteRecordById();
                 break;
             case 7:
                 System.exit(0);
         }
     }
 
-    private static void updateRecords() {
+    @Override
+    public void updateRecords() {
         boolean isCorrect;
         int num = inputNumber(3, "Input your choice: ");
         if (num == 1) {
@@ -344,7 +350,8 @@ public class Manager {
         return isCorrect;
     }
 
-    private static void deleteRecordById() {
+    @Override
+    public void deleteRecordById() {
         String str;
         int num = inputNumber(4, "Input your choice: ");
         if (num == 1) {
@@ -356,7 +363,7 @@ public class Manager {
                 str = scanner.nextLine();
                 if (str.equals("YES")) {
                     mapOfTasks.remove(task.getId());
-                    System.out.println("Subtask was successfully removed.");
+                    System.out.println("Task was successfully removed.");
                 } else if (str.equals("NO")) {
                     System.out.println("Task has not been deleted.");
                 } else {
@@ -372,7 +379,7 @@ public class Manager {
                 str = scanner.nextLine();
                 if (str.equals("YES")) {
                     mapOfEpics.remove(epic.getId());
-                    System.out.println("Subtask was successfully removed.");
+                    System.out.println("Epic was successfully removed.");
                 } else if (str.equals("NO")) {
                     System.out.println("Epic has not been deleted.");
                 } else {
@@ -404,11 +411,12 @@ public class Manager {
         }
     }
 
-    private static void setStatusToEpic() {
+    @Override
+    public void setStatusToEpic() {
         boolean isNew = true;
         boolean isDone = true;
-        for (Epic epic: mapOfEpics.values()) {
-            for (Subtask subtask: epic.getMapOfSubtasks().values()) {
+        for (Epic epic : mapOfEpics.values()) {
+            for (Subtask subtask : epic.getMapOfSubtasks().values()) {
                 if (!(subtask.getStatus().equals("NEW"))) {
                     isNew = false;
                 }
@@ -420,7 +428,7 @@ public class Manager {
                 epic.setStatus("NEW");
             } else if (isDone) {
                 epic.setStatus("DONE");
-            } else  {
+            } else {
                 epic.setStatus("IN_PROGRESS");
             }
         }
