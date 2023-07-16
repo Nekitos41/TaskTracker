@@ -14,4 +14,6 @@ public interface TaskManager {
     void updateRecords();
 
     void deleteRecordById();
+
+    void history();
 }

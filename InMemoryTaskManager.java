@@ -1,10 +1,12 @@
 package sprint_2.task_tracker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class InMemoryTaskManager implements TaskManager {
     static Scanner scanner = new Scanner(System.in);
+    static ArrayList<Task> listOfHistory = new ArrayList<>();
     static HashMap<Integer, Task> mapOfTasks = new HashMap<>();
     static HashMap<Integer, Epic> mapOfEpics = new HashMap<>();
     static int idTask = 1;
@@ -43,7 +45,8 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("4 - Get a record by id.");
         System.out.println("5 - Update status of record.");
         System.out.println("6 - Delete a record by id.");
-        System.out.println("7 - Exit.");
+        System.out.println("7 - Watch history.");
+        System.out.println("8 - Exit.");
     }
 
     private static void outputTypeOfRecords(String str) {
@@ -61,9 +64,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     private static void getUserChoice() {
         int num = 0;
-        while (num != 7) {
+        while (num != 8) {
             outputMenu();
-            num = inputNumber(7, "Input your choice: ");
+            num = inputNumber(8, "Input your choice: ");
             executeUserChoice(num);
         }
     }
@@ -222,11 +225,15 @@ public class InMemoryTaskManager implements TaskManager {
             Task task = getById(mapOfTasks, "task", idTask - 1);
             if (task != null) {
                 System.out.println(task);
+                checkListOfHistory();
+                listOfHistory.add(task);
             }
         } else if (num == 2) {
             Epic epic = getById(mapOfEpics, "epic", idEpic - 1);
             if (epic != null) {
                 System.out.println(epic);
+                checkListOfHistory();
+                listOfHistory.add(epic);
             }
         } else if (num == 3) {
             Epic epic = chooseEpic();
@@ -235,6 +242,8 @@ public class InMemoryTaskManager implements TaskManager {
                 Subtask subtask = getById(mapOfSubtasks, "subtask", mapOfSubtasks.size());
                 if (subtask != null) {
                     System.out.println(subtask);
+                    checkListOfHistory();
+                    listOfHistory.add(subtask);
                 }
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
@@ -289,6 +298,9 @@ public class InMemoryTaskManager implements TaskManager {
                 taskManager.deleteRecordById();
                 break;
             case 7:
+                taskManager.history();
+                break;
+            case 8:
                 System.exit(0);
         }
     }
@@ -408,6 +420,23 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
             }
+        }
+    }
+
+    @Override
+    public void history() {
+        if (!(listOfHistory.isEmpty())) {
+            for (Task elem : listOfHistory) {
+                System.out.println(elem);
+            }
+        } else {
+            System.out.println("List of history is empty");
+        }
+    }
+
+    private static void checkListOfHistory() {
+        if (listOfHistory.size() == 10) {
+            listOfHistory.remove(0);
         }
     }
 
