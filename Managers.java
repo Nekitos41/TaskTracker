@@ -1,7 +1,11 @@
 package sprint_2.task_tracker;
 
 public class Managers {
-    TaskManager getDefault() {
+    static TaskManager getDefault() {
         return new InMemoryTaskManager();
+    }
+
+    static HistoryManager getDefaultHistory() {
+        return new InMemoryHistoryManager();
     }
 }

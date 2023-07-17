@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class InMemoryTaskManager implements TaskManager {
     static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Task> listOfHistory = new ArrayList<>();
     static HashMap<Integer, Task> mapOfTasks = new HashMap<>();
     static HashMap<Integer, Epic> mapOfEpics = new HashMap<>();
     static int idTask = 1;
@@ -221,19 +220,18 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void getById() {
         int num = inputNumber(4, "Input your choice: ");
+        HistoryManager historyManager = Managers.getDefaultHistory();
         if (num == 1) {
             Task task = getById(mapOfTasks, "task", idTask - 1);
             if (task != null) {
                 System.out.println(task);
-                checkListOfHistory();
-                listOfHistory.add(task);
+                historyManager.add(task);
             }
         } else if (num == 2) {
             Epic epic = getById(mapOfEpics, "epic", idEpic - 1);
             if (epic != null) {
                 System.out.println(epic);
-                checkListOfHistory();
-                listOfHistory.add(epic);
+                historyManager.add(epic);
             }
         } else if (num == 3) {
             Epic epic = chooseEpic();
@@ -242,8 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
                 Subtask subtask = getById(mapOfSubtasks, "subtask", mapOfSubtasks.size());
                 if (subtask != null) {
                     System.out.println(subtask);
-                    checkListOfHistory();
-                    listOfHistory.add(subtask);
+                    historyManager.add(subtask);
                 }
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
@@ -266,7 +263,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private static void executeUserChoice(int num) {
-        TaskManager taskManager = new InMemoryTaskManager();
+        TaskManager taskManager = Managers.getDefault();
         switch (num) {
             case 1:
                 outputTypeOfRecords("Create");
@@ -298,7 +295,8 @@ public class InMemoryTaskManager implements TaskManager {
                 taskManager.deleteRecordById();
                 break;
             case 7:
-                taskManager.history();
+                HistoryManager historyManager = Managers.getDefaultHistory();
+                historyManager.getHistory();
                 break;
             case 8:
                 System.exit(0);
@@ -422,24 +420,6 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
     }
-
-    @Override
-    public void history() {
-        if (!(listOfHistory.isEmpty())) {
-            for (Task elem : listOfHistory) {
-                System.out.println(elem);
-            }
-        } else {
-            System.out.println("List of history is empty.");
-        }
-    }
-
-    private static void checkListOfHistory() {
-        if (listOfHistory.size() == 10) {
-            listOfHistory.remove(0);
-        }
-    }
-
     @Override
     public void setStatusToEpic() {
         boolean isNew = true;
