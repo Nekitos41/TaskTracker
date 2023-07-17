@@ -96,11 +96,11 @@ public class InMemoryTaskManager implements TaskManager {
             isIncorrect = checkSmth(description, 20);
         } while (isIncorrect);
         if (str.equals("task")) {
-            obj = new Task(name, description, idTask, "NEW");
+            obj = new Task(name, description, idTask, Status.NEW);
         } else if (str.equals("epic")) {
-            obj = new Epic(name, description, idEpic, "NEW");
+            obj = new Epic(name, description, idEpic, Status.NEW);
         } else if (str.equals("subtask")) {
-            obj = new Subtask(name, description, idSubtask, "NEW");
+            obj = new Subtask(name, description, idSubtask, Status.NEW);
         }
         return obj;
     }
@@ -342,18 +342,18 @@ public class InMemoryTaskManager implements TaskManager {
         String choice = scanner.nextLine();
         if (str.equals("task")) {
             if (choice.equals("IN_PROGRESS")) {
-                ((Task) obj).setStatus("IN_PROGRESS");
+                ((Task) obj).setStatus(Status.IN_PROGRESS);
             } else if (choice.equals("DONE")) {
-                ((Task) obj).setStatus("DONE");
+                ((Task) obj).setStatus(Status.DONE);
             } else {
                 System.out.println("Incorrect status of " + str + ".");
                 isCorrect = false;
             }
         } else if (str.equals("subtask")) {
             if (choice.equals("IN_PROGRESS")) {
-                ((Subtask) obj).setStatus("IN_PROGRESS");
+                ((Subtask) obj).setStatus(Status.IN_PROGRESS);
             } else if (choice.equals("DONE")) {
-                ((Subtask) obj).setStatus("DONE");
+                ((Subtask) obj).setStatus(Status.DONE);
             } else {
                 System.out.println("Incorrect status of " + str + ".");
                 isCorrect = false;
@@ -430,7 +430,7 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println(elem);
             }
         } else {
-            System.out.println("List of history is empty");
+            System.out.println("List of history is empty.");
         }
     }
 
@@ -446,19 +446,19 @@ public class InMemoryTaskManager implements TaskManager {
         boolean isDone = true;
         for (Epic epic : mapOfEpics.values()) {
             for (Subtask subtask : epic.getMapOfSubtasks().values()) {
-                if (!(subtask.getStatus().equals("NEW"))) {
+                if (!(subtask.getStatus() == Status.NEW)) {
                     isNew = false;
                 }
-                if (!(subtask.getStatus().equals("DONE"))) {
+                if (!(subtask.getStatus() == Status.DONE)) {
                     isDone = false;
                 }
             }
             if (epic.getMapOfSubtasks().size() == 0 || isNew) {
-                epic.setStatus("NEW");
+                epic.setStatus(Status.NEW);
             } else if (isDone) {
-                epic.setStatus("DONE");
+                epic.setStatus(Status.DONE);
             } else {
-                epic.setStatus("IN_PROGRESS");
+                epic.setStatus(Status.IN_PROGRESS);
             }
         }
     }
