@@ -1,7 +1,6 @@
 package sprint_2.task_tracker;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -46,7 +45,8 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("5 - Update status of record.");
         System.out.println("6 - Delete a record by id.");
         System.out.println("7 - Watch history.");
-        System.out.println("8 - Exit.");
+        System.out.println("8 - Delete a record from history by id.");
+        System.out.println("9 - Exit.");
     }
 
     private static void outputTypeOfRecords(String str) {
@@ -64,9 +64,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     private static void getUserChoice() {
         int num = 0;
-        while (num != 8) {
+        while (num != 9) {
             outputMenu();
-            num = inputNumber(8, "Input your choice: ");
+            num = inputNumber(9, "Input your choice: ");
             executeUserChoice(num);
         }
     }
@@ -265,6 +265,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private static void executeUserChoice(int num) {
         TaskManager taskManager = Managers.getDefault();
+        HistoryManager historyManager = Managers.getDefaultHistory();
         switch (num) {
             case 1:
                 outputTypeOfRecords("Create");
@@ -296,11 +297,14 @@ public class InMemoryTaskManager implements TaskManager {
                 taskManager.deleteRecordById();
                 break;
             case 7:
-                HistoryManager historyManager = Managers.getDefaultHistory();
                 Set<Task> list = historyManager.getHistory();
                 outputHistory(list);
                 break;
             case 8:
+                int id = inputNumber(idTask - 1, "Input id you want to delete from history: ");
+                historyManager.remove(id);
+                break;
+            case 9:
                 System.exit(0);
         }
     }
