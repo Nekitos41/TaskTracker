@@ -1,8 +1,9 @@
 package sprint_2.task_tracker;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class InMemoryTaskManager implements TaskManager {
     static Scanner scanner = new Scanner(System.in);
@@ -296,10 +297,21 @@ public class InMemoryTaskManager implements TaskManager {
                 break;
             case 7:
                 HistoryManager historyManager = Managers.getDefaultHistory();
-                historyManager.getHistory();
+                Set<Task> list = historyManager.getHistory();
+                outputHistory(list);
                 break;
             case 8:
                 System.exit(0);
+        }
+    }
+
+    private static void outputHistory(Set<Task> listOfHistory) {
+        if (!(listOfHistory.isEmpty())) {
+            for (Task elem : listOfHistory) {
+                System.out.println(elem);
+            }
+        } else {
+            System.out.println("List of history is empty.");
         }
     }
 
@@ -420,6 +432,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
     }
+
     @Override
     public void setStatusToEpic() {
         boolean isNew = true;

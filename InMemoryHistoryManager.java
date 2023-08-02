@@ -1,9 +1,11 @@
 package sprint_2.task_tracker;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    static ArrayList<Task> listOfHistory = new ArrayList<>();
+    static Set<Task> listOfHistory = new HashSet<>();
+
     @Override
     public void add(Task task) {
         final int MAX_SIZE = 10;
@@ -14,13 +16,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void getHistory() {
-        if (!(listOfHistory.isEmpty())) {
-            for (Task elem : listOfHistory) {
-                System.out.println(elem);
-            }
-        } else {
-            System.out.println("List of history is empty.");
-        }
+    public Set<Task> getHistory() {
+        return listOfHistory;
     }
 }
