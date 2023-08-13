@@ -1,8 +1,6 @@
 package sprint_2.task_tracker;
 
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     static Scanner scanner = new Scanner(System.in);
@@ -227,12 +225,14 @@ public class InMemoryTaskManager implements TaskManager {
             if (task != null) {
                 System.out.println(task);
                 historyManager.add(task);
+                historyManager.linkLast(task);
             }
         } else if (num == 2) {
             Epic epic = getById(mapOfEpics, "epic", idEpic - 1);
             if (epic != null) {
                 System.out.println(epic);
                 historyManager.add(epic);
+                historyManager.linkLast(epic);
             }
         } else if (num == 3) {
             Epic epic = chooseEpic();
@@ -242,6 +242,7 @@ public class InMemoryTaskManager implements TaskManager {
                 if (subtask != null) {
                     System.out.println(subtask);
                     historyManager.add(subtask);
+                    historyManager.linkLast(subtask);
                 }
             } else {
                 System.out.println("List of subtasks of all epics is empty.");
@@ -297,8 +298,8 @@ public class InMemoryTaskManager implements TaskManager {
                 taskManager.deleteRecordById();
                 break;
             case 7:
-                Set<Task> list = historyManager.getHistory();
-                outputHistory(list);
+                ArrayList<Task> list2 = historyManager.getTasks();
+                outputHistory(new HashSet<>(list2));
                 break;
             case 8:
                 int id = inputNumber(idTask - 1, "Input id you want to delete from history: ");

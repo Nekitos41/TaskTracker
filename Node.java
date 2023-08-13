@@ -4,6 +4,8 @@ public class Node {
     Task data;
     Node next;
     Node prev;
+    static Node first;
+    static Node last;
 
     public Node(Task data, Node next, Node prev) {
         this.data = data;

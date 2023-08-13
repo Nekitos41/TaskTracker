@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import static sprint_2.task_tracker.Node.first;
+import static sprint_2.task_tracker.Node.last;
+
 public class InMemoryHistoryManager implements HistoryManager {
-    Node first;
-    Node last;
     static Set<Task> listOfHistory = new HashSet<>();
 
     @Override
@@ -48,7 +49,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public ArrayList<Task> getTasks() {
         Node f = first;
         ArrayList<Task> list = new ArrayList<>();
-        while (f != last) {
+        while (f != null) {
             list.add(f.data);
             f = f.next;
         }
