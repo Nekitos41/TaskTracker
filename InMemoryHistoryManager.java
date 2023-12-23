@@ -25,26 +25,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             return task.getId() == id;
         });
     }
-
-    @Override
-    public Set<Task> getHistory() {
-        return listOfHistory;
-    }
-
-    @Override
-    public void removeNode(Task task) {
-        Node f = first;
-        while (f != last) {
-            assert f != null;
-            if (f.data.equals(task)) {
-                Node prev = f.prev;
-                prev.next = f.next;
-                f.next = null;
-            }
-            f = f.next;
-        }
-    }
-
     @Override
     public ArrayList<Task> getTasks() {
         Node f = first;

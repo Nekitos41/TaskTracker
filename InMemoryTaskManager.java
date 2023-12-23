@@ -104,7 +104,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createRecord() {
+    public TypeOfTask createRecord() {
         int num;
         Task obj;
         boolean isCorrect = true;
@@ -116,12 +116,14 @@ public class InMemoryTaskManager implements TaskManager {
                 mapOfTasks.put(idTask, obj);
                 idTask++;
                 System.out.println("The task has been created.");
+                return TypeOfTask.TASK;
             } else if (num == 2) {
                 isCorrect = false;
                 obj = getInfoFromUser("epic");
                 mapOfEpics.put(idEpic, (Epic) obj);
                 idEpic++;
                 System.out.println("The epic has been created.");
+                return TypeOfTask.EPIC;
             } else if (num == 3) {
                 Epic epic = chooseEpic();
                 if (epic != null) {
@@ -134,6 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
                         mapOfSubtasks.put(size + 1, (Subtask) obj);
                         epic.setMapOfSubtasks(mapOfSubtasks);
                         System.out.println("The subtask has been created.");
+                        return TypeOfTask.SUBTASK;
                     } else {
                         mapOfSubtasks = new HashMap<>();
                         mapOfSubtasks.put(1, (Subtask) obj);
@@ -148,6 +151,7 @@ public class InMemoryTaskManager implements TaskManager {
                 isCorrect = false;
             }
         } while (isCorrect);
+        return null;
     }
 
     private static void outputTypeOfTasks(String str) {
@@ -265,7 +269,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private static void executeUserChoice(int num) {
-        TaskManager taskManager = Managers.getDefault();
+        FileBackedTasksManager taskManager = new FileBackedTasksManager();
+        //TaskManager taskManager = Managers.getDefault();
         HistoryManager historyManager = Managers.getDefaultHistory();
         switch (num) {
             case 1:
