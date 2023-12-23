@@ -2,6 +2,8 @@ package sprint_2.task_tracker;
 
 import java.util.*;
 
+import static sprint_2.task_tracker.FileBackedTasksManager.loadFromFile;
+
 public class InMemoryTaskManager implements TaskManager {
     static Scanner scanner = new Scanner(System.in);
     static HashMap<Integer, Task> mapOfTasks = new HashMap<>();
@@ -11,6 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     static int idSubtask = 1;
 
     public static void main(String[] args) {
+        loadFromFile();
         getUserChoice();
     }
 

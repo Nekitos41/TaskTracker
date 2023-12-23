@@ -1,7 +1,7 @@
 package sprint_2.task_tracker;
 
 import java.util.ArrayList;
-import java.util.Set;
+
 
 public interface HistoryManager {
     void add(Task task);
