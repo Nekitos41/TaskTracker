@@ -359,7 +359,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private static <T> boolean setStatus(T obj, String str) {
+    static <T> boolean setStatus(T obj, String str) {
         boolean isCorrect = true;
         System.out.print("Input status of " + str + " you want to set(IN_PROGRESS or DONE): ");
         String choice = scanner.nextLine();
